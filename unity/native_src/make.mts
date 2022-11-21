@@ -34,7 +34,7 @@ const platformCompileConfig = {
                 assert.equal(0, exec(`cmake ${cmakeDArgs} -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DJS_ENGINE=${options.backend} -DCMAKE_BUILD_TYPE=${options.config} -DANDROID_ABI=${ABI} -H. -B${CMAKE_BUILD_PATH} -DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=${API} -DANDROID_TOOLCHAIN=clang -DANDROID_TOOLCHAIN_NAME=${TOOLCHAIN_NAME}`).code)
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/libpuerts.so`
+                return `${CMAKE_BUILD_PATH}/libpuerts1.so`
             }
         },
         'arm64': {
@@ -48,7 +48,7 @@ const platformCompileConfig = {
                 assert.equal(0, exec(`cmake ${cmakeDArgs} -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DJS_ENGINE=${options.backend} -DCMAKE_BUILD_TYPE=${options.config} -DANDROID_ABI=${ABI} -H. -B${CMAKE_BUILD_PATH} -DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=${API} -DANDROID_TOOLCHAIN=clang -DANDROID_TOOLCHAIN_NAME=${TOOLCHAIN_NAME}`).code)
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/libpuerts.so`
+                return `${CMAKE_BUILD_PATH}/libpuerts1.so`
             }
         },
         'x64': {
@@ -62,7 +62,7 @@ const platformCompileConfig = {
                 assert.equal(0, exec(`cmake ${cmakeDArgs} -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DJS_ENGINE=${options.backend} -DCMAKE_BUILD_TYPE=${options.config} -DANDROID_ABI=${ABI} -H. -B${CMAKE_BUILD_PATH} -DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=${API} -DANDROID_TOOLCHAIN=clang -DANDROID_TOOLCHAIN_NAME=${TOOLCHAIN_NAME}`).code)
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/libpuerts.so`
+                return `${CMAKE_BUILD_PATH}/libpuerts1.so`
             }
         }
     },
@@ -75,7 +75,7 @@ const platformCompileConfig = {
                 cd("..")
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/${options.config}-iphoneos/libpuerts.a`
+                return `${CMAKE_BUILD_PATH}/${options.config}-iphoneos/libpuerts1.a`
             }
         }
     },
@@ -88,8 +88,8 @@ const platformCompileConfig = {
                 cd("..")
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                mv(`${CMAKE_BUILD_PATH}/${options.config}/libpuerts.dylib`, `${CMAKE_BUILD_PATH}/${options.config}/puerts.bundle`)
-                return `${CMAKE_BUILD_PATH}/${options.config}/puerts.bundle`
+                mv(`${CMAKE_BUILD_PATH}/${options.config}/libpuerts1.dylib`, `${CMAKE_BUILD_PATH}/${options.config}/puerts1.bundle`)
+                return `${CMAKE_BUILD_PATH}/${options.config}/puerts1.bundle`
             }
         },
         'arm64': {
@@ -100,7 +100,7 @@ const platformCompileConfig = {
                 cd("..")
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/${options.config}/libpuerts.dylib`
+                return `${CMAKE_BUILD_PATH}/${options.config}/libpuerts1.dylib`
             }
         }
     },
@@ -113,7 +113,7 @@ const platformCompileConfig = {
                 cd("..")
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/${options.config}/puerts.dll`
+                return `${CMAKE_BUILD_PATH}/${options.config}/puerts1.dll`
             }
         },
         'ia32': {
@@ -124,7 +124,7 @@ const platformCompileConfig = {
                 cd("..")
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/${options.config}/puerts.dll`
+                return `${CMAKE_BUILD_PATH}/${options.config}/puerts1.dll`
             }
         }
     },
@@ -137,7 +137,7 @@ const platformCompileConfig = {
                 cd("..")
                 assert.equal(0, exec(`cmake --build ${CMAKE_BUILD_PATH} --config ${options.config}`).code)
 
-                return `${CMAKE_BUILD_PATH}/libpuerts.so`;
+                return `${CMAKE_BUILD_PATH}/libpuerts1.so`;
             }
         }
     }

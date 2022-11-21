@@ -87,10 +87,10 @@ source_group_by_dir(${CMAKE_CURRENT_SOURCE_DIR} PUERTS_SRC)
 if ( APPLE )
     if ( IOS )
         set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
-        add_library(puerts STATIC
+        add_library(puerts1 STATIC
            ${PUERTS_SRC} ${PUERTS_INC}
         )
-		set_xcode_property (puerts IPHONEOS_DEPLOYMENT_TARGET "7.0" "all")
+		set_xcode_property (puerts1 IPHONEOS_DEPLOYMENT_TARGET "7.0" "all")
     else ()
         if ( NOT DEFINED FOR_SILICON )
             set(CMAKE_OSX_ARCHITECTURES x86_64)
@@ -100,12 +100,12 @@ if ( APPLE )
         
         set(CMAKE_SKIP_RPATH FALSE)    
         add_link_options(-rpath "@loader_path/")
-        add_library(puerts SHARED
+        add_library(puerts1 SHARED
             ${PUERTS_SRC} ${PUERTS_INC}
         )
     endif ()
 else ()
-    add_library(puerts SHARED
+    add_library(puerts1 SHARED
         ${PUERTS_SRC} ${PUERTS_INC}
     )
 endif ()
@@ -113,16 +113,16 @@ endif ()
 # target_compile_definitions (puerts PRIVATE THREAD_SAFE)
 
 if ( WIN32 AND NOT CYGWIN )
-    target_compile_definitions (puerts PRIVATE BUILDING_V8_SHARED)
+    target_compile_definitions (puerts1 PRIVATE BUILDING_V8_SHARED)
 endif ()
 
 if ( NOT CMAKE_BUILD_TYPE MATCHES "Release" )
-    target_compile_definitions (puerts PRIVATE PUERTS_DEBUG)
+    target_compile_definitions (puerts1 PRIVATE PUERTS_DEBUG)
 endif ()
 
 if ( MSYS OR WIN32 )
     if ( WIN32 ) 
-        target_link_libraries(puerts
+        target_link_libraries(puerts1
             winmm.lib
             dbghelp.lib
             shlwapi.lib
@@ -130,37 +130,37 @@ if ( MSYS OR WIN32 )
     endif ()
 
     # definition
-    target_compile_definitions (puerts PRIVATE PLATFORM_WINDOWS)
+    target_compile_definitions (puerts1 PRIVATE PLATFORM_WINDOWS)
 
 elseif ( ANDROID )
 
     find_library(log-lib log)
-    target_link_libraries(puerts
+    target_link_libraries(puerts1
         ${log-lib}
     )
 
     set(BACKEND_LIB_NAMES "-Wl,--whole-archive$<SEMICOLON>${BACKEND_LIB_NAMES}$<SEMICOLON>-Wl,--no-whole-archive")
     if ( ANDROID_ABI STREQUAL "armeabi-v7a")
         # definition
-        target_compile_definitions (puerts PRIVATE PLATFORM_ANDROID_ARM)
+        target_compile_definitions (puerts1 PRIVATE PLATFORM_ANDROID_ARM)
 
     elseif ( ANDROID_ABI STREQUAL "arm64-v8a")
         # link
-        target_link_libraries(puerts
+        target_link_libraries(puerts1
             ${log-lib}
         )
         
         # definition
-        target_compile_definitions (puerts PRIVATE PLATFORM_ANDROID_ARM64)
+        target_compile_definitions (puerts1 PRIVATE PLATFORM_ANDROID_ARM64)
     else ()
 
-        target_compile_definitions (puerts PRIVATE PLATFORM_ANDROID_x64)
+        target_compile_definitions (puerts1 PRIVATE PLATFORM_ANDROID_x64)
     endif ()
 
     #set_target_properties( puerts PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/android_version.script)
     #set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--gc-sections -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/android_version.script")
     #set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--gc-sections")
-    add_custom_command(TARGET puerts POST_BUILD
+    add_custom_command(TARGET puerts1 POST_BUILD
             COMMAND "${ANDROID_TOOLCHAIN_PREFIX}strip" -g -S -d --strip-debug --verbose
             "${CMAKE_BINARY_DIR}/libpuerts1.so"
             COMMENT "Strip debug symbols done on final binary.")
@@ -170,41 +170,41 @@ elseif ( APPLE )
     if ( IOS )
         #definition
         if(PLATFORM STREQUAL "SIMULATOR64")
-            target_compile_definitions (puerts PRIVATE PLATFORM_IOS_SIMULATOR)
+            target_compile_definitions (puerts1 PRIVATE PLATFORM_IOS_SIMULATOR)
             message(STATUS "SIMULATOR64 BUILD...")
         else ()
-            target_compile_definitions (puerts PRIVATE PLATFORM_IOS)
+            target_compile_definitions (puerts1 PRIVATE PLATFORM_IOS)
         endif ()
 
     else ()
     
         #definition
         if ( DEFINED FOR_SILICON )
-            target_compile_definitions (puerts PRIVATE PLATFORM_MAC_ARM64)
+            target_compile_definitions (puerts1 PRIVATE PLATFORM_MAC_ARM64)
         endif()
-        target_compile_definitions (puerts PRIVATE PLATFORM_MAC)
+        target_compile_definitions (puerts1 PRIVATE PLATFORM_MAC)
     endif ()
 
 elseif (UNIX)
     # link
-    target_link_libraries(puerts pthread)
+    target_link_libraries(puerts1 pthread)
     
     # definition
-    target_compile_definitions (puerts PRIVATE PLATFORM_LINUX)
+    target_compile_definitions (puerts1 PRIVATE PLATFORM_LINUX)
     set(CMAKE_CXX_COMPILER "clang++")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++ -lc++abi")
 endif ()
 
 # link
-target_link_libraries(puerts
+target_link_libraries(puerts1
     ${BACKEND_LIB_NAMES}
 )
-target_compile_definitions (puerts PRIVATE ${BACKEND_DEFINITIONS})
+target_compile_definitions (puerts1 PRIVATE ${BACKEND_DEFINITIONS})
 
 if ( WIN32 AND NOT CYGWIN AND NOT ( CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" ) AND NOT ANDROID AND NOT MSYS)
-	set_property(TARGET puerts PROPERTY
+	set_property(TARGET puerts1 PROPERTY
              MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif ()
 
-install(TARGETS puerts DESTINATION bin)
+install(TARGETS puerts1 DESTINATION bin)
